@@ -2,10 +2,10 @@ import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Card, FAB } from "react-native-paper";
 
-const Home = () => {
+const Home = ({ navigation }) => {
   return (
     <>
-      <Card style={styles.card}>
+      <Card style={styles.card} onPress={() => navigation.navigate("Profile")}>
         <View
           style={{
             flexDirection: "row",
@@ -27,8 +27,8 @@ const Home = () => {
       <FAB
         style={styles.fab}
         icon="plus"
-        theme={{colors:{accent:'dodgerblue'}}}
-        onPress={() => console.log("Pressed")}
+        theme={{ colors: { accent: "dodgerblue" } }}
+        onPress={() => navigation.navigate("Employee")}
       />
     </>
   );

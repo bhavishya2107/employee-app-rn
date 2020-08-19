@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Modal } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import { StyleSheet, View, Modal } from "react-native";
+import { TextInput, Button, IconButton, Colors } from "react-native-paper";
 
-const CreateEmployee = () => {
+
+const CreateEmployee = ({ navigation }) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -79,16 +80,15 @@ const CreateEmployee = () => {
               Gallery
             </Button>
           </View>
-          <Button
-            mode="contained"
+          <IconButton
             style={{
-              width: "80%",
               alignSelf: "center",
             }}
+            icon="close-circle"
+            color={Colors.black}
+            size={50}
             onPress={() => setModal(false)}
-          >
-            Cancel
-          </Button>
+          />
         </View>
       </Modal>
     </View>
@@ -119,12 +119,12 @@ const styles = StyleSheet.create({
   modalView: {
     position: "absolute",
     bottom: 0,
-    top: 500,
-    width: "99%",
-    borderRadius: 20,
+    top: 550,
+    width: "100%",
+    borderRadius: 30,
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0,
-    backgroundColor: "midnightblue",
+    backgroundColor: "rgba(34,100,250,0.7)",
     alignSelf: "center",
   },
 });

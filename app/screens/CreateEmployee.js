@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Modal } from "react-native";
 import { TextInput, Button, IconButton, Colors } from "react-native-paper";
-
+import { pickImageFromCamera, pickImageFromGallery } from "../utils/helpers";
 
 const CreateEmployee = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -10,6 +10,7 @@ const CreateEmployee = ({ navigation }) => {
   const [salary, setSalary] = useState("");
   const [picture, setPicture] = useState("");
   const [modal, setModal] = useState(false);
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -68,14 +69,14 @@ const CreateEmployee = ({ navigation }) => {
             <Button
               icon="camera-image"
               mode="contained"
-              onPress={() => setModal(false)}
+              onPress={pickImageFromCamera}
             >
               Camera
             </Button>
             <Button
               icon="folder-image"
               mode="contained"
-              onPress={() => setModal(false)}
+              onPress={pickImageFromGallery}
             >
               Gallery
             </Button>

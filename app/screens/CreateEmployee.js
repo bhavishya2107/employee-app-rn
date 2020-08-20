@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Modal } from "react-native";
+import { StyleSheet, View, Modal, Text } from "react-native";
 import { TextInput, Button, IconButton, Colors } from "react-native-paper";
 import { pickImageFromCamera, pickImageFromGallery } from "../utils/helpers";
 
@@ -10,6 +10,21 @@ const CreateEmployee = ({ navigation }) => {
   const [salary, setSalary] = useState("");
   const [picture, setPicture] = useState("");
   const [modal, setModal] = useState(false);
+
+  const handleImageUpload = (image) => {
+    const data = new FormData();
+    data.append("file", image);
+    data.append("upload_preset", "employee-app-rn");
+    data.append("cloud_name", "saktgamerr");
+    fetch("https://api.cloudinary.com/v1_1/saktgamerr/image/upload", {
+      method: "POST",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setPicture(data.url);
+      });
+  };
 
   return (
     <View style={styles.container}>
@@ -46,6 +61,7 @@ const CreateEmployee = ({ navigation }) => {
         theme={theme}
         onChangeText={(text) => setSalary(text)}
       />
+      {picture ? <Text>Uploaded</Text> : null}
       <Button
         style={styles.inputStyle}
         icon="upload"
@@ -69,14 +85,14 @@ const CreateEmployee = ({ navigation }) => {
             <Button
               icon="camera-image"
               mode="contained"
-              onPress={pickImageFromCamera}
+              onPress={() => pickImageFromCamera(handleImageUpload)}
             >
               Camera
             </Button>
             <Button
               icon="folder-image"
               mode="contained"
-              onPress={pickImageFromGallery}
+              onPress={() => pickImageFromGallery(handleImageUpload)}
             >
               Gallery
             </Button>

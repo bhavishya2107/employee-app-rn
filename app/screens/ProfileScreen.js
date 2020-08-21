@@ -54,6 +54,12 @@ const ProfileScreen = () => {
           <Text style={styles.text}>80,000$</Text>
         </View>
       </Card>
+      <Card style={styles.card}>
+        <View style={styles.cardContent}>
+          <MaterialIcons name="home" size={35} />
+          <Text style={styles.text}>San Jose, California</Text>
+        </View>
+      </Card>
       <View
         style={{
           flexDirection: "row",

@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Modal, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Modal,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import { TextInput, Button, IconButton, Colors } from "react-native-paper";
 import { pickImageFromCamera, pickImageFromGallery } from "../utils/helpers";
 
-const CreateEmployee = ({ navigation }) => {
+const CreateEmployee = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -27,88 +35,96 @@ const CreateEmployee = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        label="Name"
-        style={styles.inputStyle}
-        value={name}
-        mode="outlined"
-        theme={theme}
-        onChangeText={(text) => setName(text)}
-      />
-      <TextInput
-        label="Phone"
-        style={styles.inputStyle}
-        value={phone}
-        mode="outlined"
-        keyboardType="number-pad"
-        theme={theme}
-        onChangeText={(text) => setPhone(text)}
-      />
-      <TextInput
-        label="Email"
-        style={styles.inputStyle}
-        value={email}
-        mode="outlined"
-        theme={theme}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        label="Salary"
-        style={styles.inputStyle}
-        value={salary}
-        mode="outlined"
-        theme={theme}
-        onChangeText={(text) => setSalary(text)}
-      />
-      {picture ? <Text>Uploaded</Text> : null}
-      <Button
-        style={styles.inputStyle}
-        icon="upload"
-        mode="contained"
-        onPress={() => setModal(true)}
-      >
-        Upload Image
-      </Button>
-      <Button
-        style={styles.inputStyle}
-        icon="content-save"
-        mode="contained"
-        onPress={() => setModal(true)}
-        theme={theme.colors.secondary}
-      >
-        Save
-      </Button>
-      <Modal animationType="slide" transparent={true} visible={modal}>
-        <View style={styles.modalView}>
-          <View style={styles.modalButtons}>
+    <>
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "andorid" ? null : "padding"}
+        >
+          <ScrollView>
+            <TextInput
+              label="Name"
+              style={styles.inputStyle}
+              value={name}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setName(text)}
+            />
+            <TextInput
+              label="Phone"
+              style={styles.inputStyle}
+              value={phone}
+              mode="outlined"
+              keyboardType="number-pad"
+              theme={theme}
+              onChangeText={(text) => setPhone(text)}
+            />
+            <TextInput
+              label="Email"
+              style={styles.inputStyle}
+              value={email}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              label="Salary"
+              style={styles.inputStyle}
+              value={salary}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setSalary(text)}
+            />
+            {picture ? <Text>Uploaded</Text> : null}
             <Button
-              icon="camera-image"
+              style={styles.inputStyle}
+              icon="upload"
               mode="contained"
-              onPress={() => pickImageFromCamera(handleImageUpload)}
+              onPress={() => setModal(true)}
             >
-              Camera
+              Upload Image
             </Button>
             <Button
-              icon="folder-image"
+              style={styles.inputStyle}
+              icon="content-save"
               mode="contained"
-              onPress={() => pickImageFromGallery(handleImageUpload)}
+              onPress={() => setModal(true)}
+              theme={theme.colors.secondary}
             >
-              Gallery
+              Save
             </Button>
-          </View>
-          <IconButton
-            style={{
-              alignSelf: "center",
-            }}
-            icon="close-circle"
-            color={Colors.black}
-            size={50}
-            onPress={() => setModal(false)}
-          />
-        </View>
-      </Modal>
-    </View>
+            <Modal animationType="slide" transparent={true} visible={modal}>
+              <View style={styles.modalView}>
+                <View style={styles.modalButtons}>
+                  <Button
+                    icon="camera-image"
+                    mode="contained"
+                    onPress={() => pickImageFromCamera(handleImageUpload)}
+                  >
+                    Camera
+                  </Button>
+                  <Button
+                    icon="folder-image"
+                    mode="contained"
+                    onPress={() => pickImageFromGallery(handleImageUpload)}
+                  >
+                    Gallery
+                  </Button>
+                </View>
+                <IconButton
+                  style={{
+                    alignSelf: "center",
+                  }}
+                  icon="close-circle"
+                  color={Colors.white}
+                  size={50}
+                  onPress={() => setModal(false)}
+                />
+              </View>
+            </Modal>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </>
   );
 };
 
@@ -122,7 +138,6 @@ const theme = {
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 20,
   },
   inputStyle: {

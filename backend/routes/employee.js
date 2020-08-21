@@ -1,12 +1,15 @@
 var express = require("express");
 var router = express.Router();
-const { createEmployee } = require("../controllers/Employee");
+const {
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+  getAllEmployees,
+} = require("../controllers/Employee");
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
-
+router.get("/", getAllEmployees);
 router.post("/", createEmployee);
+router.put("/:id", updateEmployee);
+router.delete("/:id", deleteEmployee);
 
 module.exports = router;

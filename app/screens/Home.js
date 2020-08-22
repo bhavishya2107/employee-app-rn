@@ -1,11 +1,36 @@
-import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { Card, FAB } from "react-native-paper";
+import axios from "axios";
 
 const Home = ({ navigation }) => {
-  return (
-    <>
-      <Card style={styles.card} onPress={() => navigation.navigate("Profile")}>
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getAllEmployees();
+  }, [data]);
+
+  const getAllEmployees = () => {
+    axios.get("http://10.0.2.2:3000/employee").then(({ data }) => {
+      setData(data.allEmployee);
+      setLoading(false);
+    });
+  };
+
+  const renderItem = (item) => {
+    return (
+      <Card
+        style={styles.card}
+        onPress={() => navigation.navigate("Profile", { item })}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -14,16 +39,34 @@ const Home = ({ navigation }) => {
           <Image
             style={{ width: 60, height: 60, borderRadius: 30, marginRight: 10 }}
             source={{
-              uri:
-                "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80",
+              uri: `${item.picture}`,
             }}
           />
           <View>
-            <Text style={styles.headingText}>Riya Shefal</Text>
-            <Text>Full Stack Developer</Text>
+            <Text style={styles.headingText}>{item.name}</Text>
+            <Text>{item.position}</Text>
           </View>
         </View>
       </Card>
+    );
+  };
+
+  return (
+    <>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return renderItem(item);
+          }}
+          refreshing={loading}
+          onRefresh={() => getAllEmployees()}
+        />
+      )}
+
       <FAB
         style={styles.fab}
         icon="plus"

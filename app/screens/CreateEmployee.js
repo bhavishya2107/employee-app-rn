@@ -13,14 +13,37 @@ import { TextInput, Button, IconButton, Colors } from "react-native-paper";
 import { pickImageFromCamera, pickImageFromGallery } from "../utils/helpers";
 import Axios from "axios";
 
-const CreateEmployee = () => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [salary, setSalary] = useState("");
-  const [picture, setPicture] = useState("");
-  const [address, setAddress] = useState("");
-  const [position, setPosition] = useState("");
+const CreateEmployee = ({ navigation, route }) => {
+  // const { item } = route.params;
+  const inputValueItem = (type) => {
+    if (route.params) {
+      switch (type) {
+        case "name":
+          return route.params.item.name;
+        case "phone":
+          return route.params.item.phone.toString();
+        case "email":
+          return route.params.item.email;
+        case "salary":
+          return route.params.item.salary;
+        case "picture":
+          return route.params.item.picture;
+        case "address":
+          return route.params.item.address;
+        case "position":
+          return route.params.item.position;
+      }
+    }
+    return "";
+  };
+
+  const [name, setName] = useState(inputValueItem("name"));
+  const [phone, setPhone] = useState(inputValueItem("phone"));
+  const [email, setEmail] = useState(inputValueItem("email"));
+  const [salary, setSalary] = useState(inputValueItem("salary"));
+  const [picture, setPicture] = useState(inputValueItem("picture"));
+  const [address, setAddress] = useState(inputValueItem("address"));
+  const [position, setPosition] = useState(inputValueItem("position"));
   const [modal, setModal] = useState(false);
 
   const handleImageUpload = (image) => {
@@ -45,13 +68,40 @@ const CreateEmployee = () => {
       phone,
       salary,
       address,
+      picture,
     };
     if (name === "" && phone === "" && email === "" && salary === "") {
       Alert.alert("Please fill all the details");
     } else {
-      Axios.post("http://10.0.2.2:3000/employee", data).then((res) =>
-        Alert.alert("Employee Created Successfully")
-      );
+      Axios.post("http://10.0.2.2:3000/employee", data).then((res) => {
+        Alert.alert("Employee Created Successfully");
+        navigation.navigate("Home");
+      });
+    }
+  };
+
+  const handleUpdate = (id) => {
+    const data = {
+      name,
+      email,
+      phone,
+      salary,
+      address,
+      picture,
+    };
+    if (
+      name === "" &&
+      phone === "" &&
+      email === "" &&
+      salary === "" &&
+      picture === ""
+    ) {
+      Alert.alert("Please fill all the details");
+    } else {
+      Axios.put(`http://10.0.2.2:3000/employee/${id}`, data).then((res) => {
+        Alert.alert("Employee Updated Successfully");
+        navigation.navigate("Home");
+      });
     }
   };
 
@@ -118,15 +168,27 @@ const CreateEmployee = () => {
             >
               Upload Image
             </Button>
-            <Button
-              style={styles.inputStyle}
-              icon="content-save"
-              mode="contained"
-              onPress={handleSubmit}
-              theme={theme.colors.secondary}
-            >
-              Save
-            </Button>
+            {route.params ? (
+              <Button
+                style={styles.inputStyle}
+                icon="content-save"
+                mode="contained"
+                onPress={() => handleUpdate(route.params.item._id)}
+                theme={theme.colors.secondary}
+              >
+                Update
+              </Button>
+            ) : (
+              <Button
+                style={styles.inputStyle}
+                icon="content-save"
+                mode="contained"
+                onPress={handleSubmit}
+                theme={theme.colors.secondary}
+              >
+                Save
+              </Button>
+            )}
             <Modal animationType="slide" transparent={true} visible={modal}>
               <View style={styles.modalView}>
                 <View style={styles.modalButtons}>

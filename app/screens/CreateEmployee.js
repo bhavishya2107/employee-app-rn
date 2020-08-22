@@ -7,9 +7,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from "react-native";
 import { TextInput, Button, IconButton, Colors } from "react-native-paper";
 import { pickImageFromCamera, pickImageFromGallery } from "../utils/helpers";
+import Axios from "axios";
 
 const CreateEmployee = () => {
   const [name, setName] = useState("");
@@ -17,6 +19,8 @@ const CreateEmployee = () => {
   const [email, setEmail] = useState("");
   const [salary, setSalary] = useState("");
   const [picture, setPicture] = useState("");
+  const [address, setAddress] = useState("");
+  const [position, setPosition] = useState("");
   const [modal, setModal] = useState(false);
 
   const handleImageUpload = (image) => {
@@ -34,12 +38,27 @@ const CreateEmployee = () => {
       });
   };
 
+  const handleSubmit = () => {
+    const data = {
+      name,
+      email,
+      phone,
+      salary,
+      address,
+    };
+    if (name === "" && phone === "" && email === "" && salary === "") {
+      Alert.alert("Please fill all the details");
+    } else {
+      Axios.post("http://10.0.2.2:3000/employee", data).then((res) =>
+        Alert.alert("Employee Created Successfully")
+      );
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "andorid" ? null : "padding"}
-        >
+        <KeyboardAvoidingView behavior={null}>
           <ScrollView>
             <TextInput
               label="Name"
@@ -48,6 +67,22 @@ const CreateEmployee = () => {
               mode="outlined"
               theme={theme}
               onChangeText={(text) => setName(text)}
+            />
+            <TextInput
+              label="Email"
+              style={styles.inputStyle}
+              value={email}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setEmail(text)}
+            />
+            <TextInput
+              label="Position"
+              style={styles.inputStyle}
+              value={position}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setPosition(text)}
             />
             <TextInput
               label="Phone"
@@ -59,20 +94,20 @@ const CreateEmployee = () => {
               onChangeText={(text) => setPhone(text)}
             />
             <TextInput
-              label="Email"
-              style={styles.inputStyle}
-              value={email}
-              mode="outlined"
-              theme={theme}
-              onChangeText={(text) => setEmail(text)}
-            />
-            <TextInput
               label="Salary"
               style={styles.inputStyle}
               value={salary}
               mode="outlined"
               theme={theme}
               onChangeText={(text) => setSalary(text)}
+            />
+            <TextInput
+              label="City"
+              style={styles.inputStyle}
+              value={address}
+              mode="outlined"
+              theme={theme}
+              onChangeText={(text) => setAddress(text)}
             />
             {picture ? <Text>Uploaded</Text> : null}
             <Button
@@ -87,7 +122,7 @@ const CreateEmployee = () => {
               style={styles.inputStyle}
               icon="content-save"
               mode="contained"
-              onPress={() => setModal(true)}
+              onPress={handleSubmit}
               theme={theme.colors.secondary}
             >
               Save
